@@ -215,13 +215,13 @@ if __name__ == "__main__":
     args = sys.argv
     # print(args)
     kwargs = adventure_cli.parse_args(args[1:])
-    print(kwargs)
+    # print(kwargs)
 
     current_dir = os.getcwd()
     # print(current_dir)
-    project_dir = normpath_join(args[0], "../")
+    project_dir = normpath_join(os.path.dirname(args[0]), "../")
     # print(project_dir)
-    examples_dir = normpath_join(project_dir, "../maps")
+    examples_dir = normpath_join(project_dir, "./maps")
     # print(examples_dir)
     examples_ext = ".txt"
     # print(examples_ext)
