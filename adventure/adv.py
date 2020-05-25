@@ -45,7 +45,7 @@ class Adventure:
         player.current_room.print_room_description(player)
 
         while True:
-            cmds = input("-> ").lower().split(" ")
+            cmds = input("-> ").lower().strip().split(" ")
             if cmds[0] in ["n", "s", "e", "w"]:
                 player.travel(cmds[0], True)
             elif cmds[0] == "q":
