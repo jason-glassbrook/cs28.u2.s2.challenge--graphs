@@ -2,6 +2,9 @@
 #   Adventure
 ############################################################
 
+import argparse
+import sys
+import os
 import ast
 import random
 
@@ -75,15 +78,97 @@ class Adventure:
             print("TESTS FAILED: INCOMPLETE TRAVERSAL")
             print(f"{len(world_info) - len(visited_rooms)} unvisited rooms")
 
-#######
-# UNCOMMENT TO WALK AROUND
-#######
-player.current_room.print_room_description(player)
-while True:
-    cmds = input("-> ").lower().split(" ")
-    if cmds[0] in ["n", "s", "e", "w"]:
-        player.travel(cmds[0], True)
-    elif cmds[0] == "q":
-        break
+
+############################################################
+
+adventure_cli = argparse.ArgumentParser(
+    prog="adventure",
+    description="Let's go on an adventure!",
+    epilog="Have fun!",
+)
+
+adventure_cli__world_file = adventure_cli.add_mutually_exclusive_group(required=False)
+
+adventure_cli__world_file.add_argument(
+    "--path",
+    "-p",
+    default=None,
+    action="store",
+)
+
+adventure_cli__world_file.add_argument(
+    "--example",
+    "-e",
+    default=None,
+    action="store",
+)
+
+adventure_cli.add_argument(
+    "--test",
+    "-t",
+    default=True,
+    action="store_true",
+)
+
+adventure_cli.add_argument(
+    "--walk",
+    "-w",
+    default=False,
+    action="store_true",
+)
+
+
+def normpath_join(*args):
+    return os.path.normpath(os.path.join(*args))
+
+
+############################################################
+
+if __name__ == "__main__":
+
+    args = sys.argv
+    # print(args)
+    kwargs = adventure_cli.parse_args(args[1:])
+
+    current_dir = os.getcwd()
+    # print(current_dir)
+    project_dir = normpath_join(args[0], "../")
+    # print(project_dir)
+    examples_dir = normpath_join(project_dir, "../maps")
+    # print(examples_dir)
+    examples_ext = ".txt"
+    # print(examples_ext)
+    world_file = None
+    # print(world_file)
+
+    if kwargs.path:
+
+        world_file = normpath_join(project_dir, kwargs.path)
+
     else:
-        print("I did not understand that command.")
+
+        # world_file = "./maps/test_line.txt"
+        # world_file = "./maps/test_cross.txt"
+        # world_file = "./maps/test_loop.txt"
+        # world_file = "./maps/test_loop_fork.txt"
+        # world_file = "./maps/main_maze.txt"
+        example_name = kwargs.example or "main_maze"
+
+        if example_name.endswith(examples_ext):
+            example_name = example_name[:-len(examples_ext)]
+
+        world_file = normpath_join(examples_dir, example_name + examples_ext)
+
+    # print(world_file)
+
+    #-----------------------------------------------------------
+
+    adventure = Adventure(world_file)
+
+    if kwargs.walk:
+
+        adventure.walk()
+
+    if kwargs.test:
+
+        adventure.test_traversal()
