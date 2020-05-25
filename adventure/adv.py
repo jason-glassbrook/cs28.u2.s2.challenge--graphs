@@ -101,6 +101,7 @@ adventure_cli__world_file.add_argument(
 adventure_cli__world_file.add_argument(
     "--example",
     "-e",
+    nargs="?",
     default=None,
     action="store",
 )
@@ -115,7 +116,25 @@ adventure_cli.add_argument(
 adventure_cli.add_argument(
     "--walk",
     "-w",
-    default=False,
+    default=None,
+    action="store_true",
+)
+
+adventure_cli.add_argument(
+    "--walk-before-test",
+    "--walk-before",
+    "-wbt",
+    "-wb",
+    default=None,
+    action="store_true",
+)
+
+adventure_cli.add_argument(
+    "--walk-after-test",
+    "--walk-after",
+    "-wat",
+    "-wa",
+    default=None,
     action="store_true",
 )
 
@@ -133,6 +152,7 @@ if __name__ == "__main__":
     args = sys.argv
     # print(args)
     kwargs = adventure_cli.parse_args(args[1:])
+    print(kwargs)
 
     current_dir = os.getcwd()
     # print(current_dir)
@@ -165,14 +185,35 @@ if __name__ == "__main__":
 
     # print(world_file)
 
+    walk_before_test = False
+    walk_after_test = False
+
+    if kwargs.walk is True:
+
+        if kwargs.walk_before_test is None and kwargs.walk_after_test is None:
+
+            walk_before_test = True
+
+    if kwargs.walk is not False:
+
+        if kwargs.walk_before_test:
+            walk_before_test = True
+
+        if kwargs.walk_after_test:
+            walk_after_test = True
+
     #-----------------------------------------------------------
 
     adventure = Adventure(world_file)
 
-    if kwargs.walk:
+    if walk_before_test:
 
         adventure.walk()
 
     if kwargs.test:
 
         adventure.test_traversal()
+
+    if walk_after_test:
+
+        adventure.walk()
