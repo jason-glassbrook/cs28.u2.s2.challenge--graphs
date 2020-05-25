@@ -80,6 +80,8 @@ class Adventure:
 
 
 ############################################################
+#   COMMAND LINE INTERFACE
+############################################################
 
 adventure_cli = argparse.ArgumentParser(
     prog="adventure",
@@ -122,6 +124,8 @@ def normpath_join(*args):
     return os.path.normpath(os.path.join(*args))
 
 
+############################################################
+#   MAIN
 ############################################################
 
 if __name__ == "__main__":
