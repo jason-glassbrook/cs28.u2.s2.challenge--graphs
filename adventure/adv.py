@@ -26,11 +26,15 @@ class Adventure:
         self.world_info = ast.literal_eval(open(world_file, "r").read())
         self.world.load_graph(self.world_info)
 
-        # print an ASCII map of the world
-        self.world.print_rooms()
-
         # initialize the player
         self.player = Player(self.world.starting_room)
+
+        return
+
+    def show_map(self):
+
+        # print an ASCII map of the world
+        self.world.print_rooms()
 
         return
 
@@ -89,12 +93,15 @@ adventure_cli = argparse.ArgumentParser(
     epilog="Have fun!",
 )
 
+#-----------------------------------------------------------
+#   World File
+#-----------------------------------------------------------
+
 adventure_cli__world_file = adventure_cli.add_mutually_exclusive_group(required=False)
 
 adventure_cli__world_file.add_argument(
     "--path",
     "-p",
-    default=None,
     action="store",
 )
 
@@ -102,16 +109,56 @@ adventure_cli__world_file.add_argument(
     "--example",
     "-e",
     nargs="?",
-    default=None,
     action="store",
 )
 
-adventure_cli.add_argument(
-    "--test",
-    "-t",
-    default=True,
+#-----------------------------------------------------------
+#   Show Map
+#-----------------------------------------------------------
+
+adventure_cli__show_map = adventure_cli.add_mutually_exclusive_group(required=False)
+
+adventure_cli__show_map.add_argument(
+    "--map",
+    "-m",
+    "--yes-map",
+    "-ym",
+    default=None,
     action="store_true",
 )
+
+adventure_cli__show_map.add_argument(
+    "--no-map",
+    "-nm",
+    default=None,
+    action="store_true",
+)
+
+#-----------------------------------------------------------
+#   Run Test
+#-----------------------------------------------------------
+
+adventure_cli__run_test = adventure_cli.add_mutually_exclusive_group(required=False)
+
+adventure_cli__run_test.add_argument(
+    "--test",
+    "-t",
+    "--yes-test",
+    "-yt",
+    default=None,
+    action="store_true",
+)
+
+adventure_cli__run_test.add_argument(
+    "--no-test",
+    "-nt",
+    default=None,
+    action="store_true",
+)
+
+#-----------------------------------------------------------
+#   Walk Modes
+#-----------------------------------------------------------
 
 adventure_cli.add_argument(
     "--walk",
@@ -138,6 +185,8 @@ adventure_cli.add_argument(
     action="store_true",
 )
 
+#-----------------------------------------------------------
+
 
 def normpath_join(*args):
     return os.path.normpath(os.path.join(*args))
@@ -146,6 +195,20 @@ def normpath_join(*args):
 ############################################################
 #   MAIN
 ############################################################
+
+DEFAULT__EXAMPLE = "main_maze"
+# "test_line"
+# "test_cross"
+# "test_loop"
+# "test_loop_fork"
+# "main_maze"
+DEFAULT__SHOW_MAP = True
+DEFAULT__RUN_TEST = True
+DEFAULT__WALK = False
+DEFAULT__WALK_BEFORE_TEST = False
+DEFAULT__WALK_AFTER_TEST = False
+
+#-----------------------------------------------------------
 
 if __name__ == "__main__":
 
@@ -165,33 +228,63 @@ if __name__ == "__main__":
     world_file = None
     # print(world_file)
 
+    #-----------------------------------------------------------
+    #   World File
+    #-----------------------------------------------------------
+
     if kwargs.path:
 
         world_file = normpath_join(project_dir, kwargs.path)
 
     else:
 
-        # world_file = "./maps/test_line.txt"
-        # world_file = "./maps/test_cross.txt"
-        # world_file = "./maps/test_loop.txt"
-        # world_file = "./maps/test_loop_fork.txt"
-        # world_file = "./maps/main_maze.txt"
-        example_name = kwargs.example or "main_maze"
+        example_name = kwargs.example or DEFAULT__EXAMPLE
 
         if example_name.endswith(examples_ext):
             example_name = example_name[:-len(examples_ext)]
 
         world_file = normpath_join(examples_dir, example_name + examples_ext)
 
-    # print(world_file)
+    # print("world file:", world_file)
 
-    walk_before_test = False
-    walk_after_test = False
+    #-----------------------------------------------------------
+    #   Show Map
+    #-----------------------------------------------------------
+
+    show_map = DEFAULT__SHOW_MAP
+
+    if kwargs.map is not None:
+        show_map = True
+
+    if kwargs.no_map is not None:
+        show_map = False
+
+    #-----------------------------------------------------------
+    #   Run Test
+    #-----------------------------------------------------------
+
+    run_test = DEFAULT__RUN_TEST
+
+    if kwargs.test is not None:
+        run_test = True
+
+    if kwargs.no_test is not None:
+        run_test = False
+
+    #-----------------------------------------------------------
+    #   Walk Modes
+    #-----------------------------------------------------------
+
+    walk = DEFAULT__WALK
+    walk_before_test = DEFAULT__WALK_BEFORE_TEST
+    walk_after_test = DEFAULT__WALK_AFTER_TEST
+
+    if kwargs.walk is not None:
+        walk = kwargs.walk
 
     if kwargs.walk is True:
 
         if kwargs.walk_before_test is None and kwargs.walk_after_test is None:
-
             walk_before_test = True
 
     if kwargs.walk is not False:
@@ -202,18 +295,28 @@ if __name__ == "__main__":
         if kwargs.walk_after_test:
             walk_after_test = True
 
+    # print("test:", test)
+    # print("walk before test:", walk_before_test)
+    # print("walk after test:", walk_after_test)
+
     #-----------------------------------------------------------
 
     adventure = Adventure(world_file)
 
-    if walk_before_test:
+    if show_map:
+        adventure.show_map()
 
-        adventure.walk()
+    if run_test:
 
-    if kwargs.test:
+        if walk_before_test:
+            adventure.walk()
 
         adventure.test_traversal()
 
-    if walk_after_test:
+        if walk_after_test:
+            adventure.walk()
 
-        adventure.walk()
+    else:
+
+        if walk:
+            adventure.walk()
