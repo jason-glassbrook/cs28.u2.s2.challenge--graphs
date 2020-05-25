@@ -4,7 +4,7 @@
 
 import typing as ty
 from tools.data_structures import DefaultDict
-from tools.iter_tools import iter_to_str
+from tools.iter_tools import iterable_to_str
 
 ############################################################
 
@@ -41,12 +41,12 @@ DEFAULT__CALL_SIGN__AFTER = "\n----------------------------------------"
 
 def parse_options__call_sign(
     #
-    pre_options: ty.Optional[ty__options] = None,
+        pre_options: ty.Optional[ty__options] = None,
     #
-    call_sign__before: str = DEFAULT__CALL_SIGN__BEFORE,
-    call_sign__after: str = DEFAULT__CALL_SIGN__AFTER,
+        call_sign__before: str = DEFAULT__CALL_SIGN__BEFORE,
+        call_sign__after: str = DEFAULT__CALL_SIGN__AFTER,
     #
-    **rest,
+        **rest,
 ) -> ty__options:
 
     return {
@@ -63,12 +63,12 @@ DEFAULT__CALL_SIGN__NAME__AFTER = ""
 
 def parse_options__call_sign__name(
     #
-    pre_options: ty.Optional[ty__options] = None,
+        pre_options: ty.Optional[ty__options] = None,
     #
-    call_sign__name__before: str = DEFAULT__CALL_SIGN__NAME__BEFORE,
-    call_sign__name__after: str = DEFAULT__CALL_SIGN__NAME__AFTER,
+        call_sign__name__before: str = DEFAULT__CALL_SIGN__NAME__BEFORE,
+        call_sign__name__after: str = DEFAULT__CALL_SIGN__NAME__AFTER,
     #
-    **rest,
+        **rest,
 ) -> ty__options:
 
     return {
@@ -85,12 +85,12 @@ DEFAULT__CALL_SIGN__ARGS__AFTER = ")"
 
 def parse_options__call_sign__args(
     #
-    pre_options: ty.Optional[ty__options] = None,
+        pre_options: ty.Optional[ty__options] = None,
     #
-    call_sign__args__before: str = DEFAULT__CALL_SIGN__ARGS__BEFORE,
-    call_sign__args__after: str = DEFAULT__CALL_SIGN__ARGS__AFTER,
+        call_sign__args__before: str = DEFAULT__CALL_SIGN__ARGS__BEFORE,
+        call_sign__args__after: str = DEFAULT__CALL_SIGN__ARGS__AFTER,
     #
-    **rest,
+        **rest,
 ) -> ty__options:
 
     return {
@@ -110,15 +110,15 @@ DEFAULT__ARGS__AFTER_EACH = ""
 
 def parse_options__args(
     #
-    pre_options: ty.Optional[ty__options] = None,
+        pre_options: ty.Optional[ty__options] = None,
     #
-    args__before_all: str = DEFAULT__ARGS__BEFORE_ALL,
-    args__after_all: str = DEFAULT__ARGS__AFTER_ALL,
-    args__between: str = DEFAULT__ARGS__BETWEEN,
-    args__before_each: str = DEFAULT__ARGS__BEFORE_EACH,
-    args__after_each: str = DEFAULT__ARGS__AFTER_EACH,
+        args__before_all: str = DEFAULT__ARGS__BEFORE_ALL,
+        args__after_all: str = DEFAULT__ARGS__AFTER_ALL,
+        args__between: str = DEFAULT__ARGS__BETWEEN,
+        args__before_each: str = DEFAULT__ARGS__BEFORE_EACH,
+        args__after_each: str = DEFAULT__ARGS__AFTER_EACH,
     #
-    **rest,
+        **rest,
 ) -> ty__options:
 
     return {
@@ -141,15 +141,15 @@ DEFAULT__KWARGS__AFTER_EACH = None
 
 def parse_options__kwargs(
     #
-    pre_options: ty.Optional[ty__options] = None,
+        pre_options: ty.Optional[ty__options] = None,
     #
-    kwargs__before_all: ty.Optional[str] = DEFAULT__KWARGS__BEFORE_ALL,
-    kwargs__after_all: ty.Optional[str] = DEFAULT__KWARGS__AFTER_ALL,
-    kwargs__between: ty.Optional[str] = DEFAULT__KWARGS__BETWEEN,
-    kwargs__before_each: ty.Optional[str] = DEFAULT__KWARGS__BEFORE_EACH,
-    kwargs__after_each: ty.Optional[str] = DEFAULT__KWARGS__AFTER_EACH,
+        kwargs__before_all: ty.Optional[str] = DEFAULT__KWARGS__BEFORE_ALL,
+        kwargs__after_all: ty.Optional[str] = DEFAULT__KWARGS__AFTER_ALL,
+        kwargs__between: ty.Optional[str] = DEFAULT__KWARGS__BETWEEN,
+        kwargs__before_each: ty.Optional[str] = DEFAULT__KWARGS__BEFORE_EACH,
+        kwargs__after_each: ty.Optional[str] = DEFAULT__KWARGS__AFTER_EACH,
     #
-    **rest,
+        **rest,
 ) -> ty__options:
 
     if pre_options is None:
@@ -190,15 +190,15 @@ DEFAULT__MESSAGES__AFTER_EACH = ""
 
 def parse_options__messages(
     #
-    pre_options: ty.Optional[ty__options] = None,
+        pre_options: ty.Optional[ty__options] = None,
     #
-    messages__before_all: str = DEFAULT__MESSAGES__BEFORE_ALL,
-    messages__after_all: str = DEFAULT__MESSAGES__AFTER_ALL,
-    messages__between: str = DEFAULT__MESSAGES__BETWEEN,
-    messages__before_each: str = DEFAULT__MESSAGES__BEFORE_EACH,
-    messages__after_each: str = DEFAULT__MESSAGES__AFTER_EACH,
+        messages__before_all: str = DEFAULT__MESSAGES__BEFORE_ALL,
+        messages__after_all: str = DEFAULT__MESSAGES__AFTER_ALL,
+        messages__between: str = DEFAULT__MESSAGES__BETWEEN,
+        messages__before_each: str = DEFAULT__MESSAGES__BEFORE_EACH,
+        messages__after_each: str = DEFAULT__MESSAGES__AFTER_EACH,
     #
-    **rest,
+        **rest,
 ) -> ty__options:
 
     return {
@@ -216,11 +216,11 @@ def parse_options__messages(
 
 
 def debug_str(
-    name: ty__name,
-    args: ty.Optional[ty__args] = None,
-    kwargs: ty.Optional[ty__kwargs] = None,
-    messages: ty.Optional[ty__messages] = None,
-    **options,
+        name: ty__name,
+        args: ty.Optional[ty__args] = None,
+        kwargs: ty.Optional[ty__kwargs] = None,
+        messages: ty.Optional[ty__messages] = None,
+        **options,
 ) -> str:
 
     return "".join((
@@ -233,10 +233,10 @@ def debug_str(
 
 
 def debug_str__call_sign(
-    name: ty__name,
-    args: ty.Optional[ty__args] = None,
-    kwargs: ty.Optional[ty__kwargs] = None,
-    **options,
+        name: ty__name,
+        args: ty.Optional[ty__args] = None,
+        kwargs: ty.Optional[ty__kwargs] = None,
+        **options,
 ) -> str:
 
     o = parse_options__call_sign(**options)
@@ -253,8 +253,8 @@ def debug_str__call_sign(
 
 
 def debug_str__call_sign__name(
-    name: ty.Optional[ty__name] = None,
-    **options,
+        name: ty.Optional[ty__name] = None,
+        **options,
 ) -> str:
 
     o = parse_options__call_sign__name(**options)
@@ -270,9 +270,9 @@ def debug_str__call_sign__name(
 
 
 def debug_str__call_sign__args(
-    args: ty.Optional[ty__args] = None,
-    kwargs: ty.Optional[ty__kwargs] = None,
-    **options,
+        args: ty.Optional[ty__args] = None,
+        kwargs: ty.Optional[ty__kwargs] = None,
+        **options,
 ) -> str:
 
     o = parse_options__call_sign__args(**options)
@@ -289,7 +289,7 @@ def debug_str__call_sign__args(
         args_str = debug_str__kwargs(kwargs, **options)
 
     else:
-        args_str = iter_to_str(
+        args_str = iterable_to_str(
             (
                 debug_str__args(args, **options),
                 debug_str__kwargs(kwargs, **options),
@@ -309,15 +309,15 @@ def debug_str__call_sign__args(
 
 
 def debug_str__args(
-    args: ty.Optional[ty__args] = None,
-    **options,
+        args: ty.Optional[ty__args] = None,
+        **options,
 ) -> str:
 
     if args is None:
         return ""
 
     else:
-        return iter_to_str(
+        return iterable_to_str(
             args,
             style="args",
             **parse_options__args(**options),
@@ -328,15 +328,15 @@ def debug_str__args(
 
 
 def debug_str__kwargs(
-    kwargs: ty.Optional[ty__kwargs] = None,
-    **options,
+        kwargs: ty.Optional[ty__kwargs] = None,
+        **options,
 ) -> str:
 
     if kwargs is None:
         return ""
 
     else:
-        return iter_to_str(
+        return iterable_to_str(
             kwargs,
             style="kwargs",
             **parse_options__kwargs(**options),
@@ -347,15 +347,15 @@ def debug_str__kwargs(
 
 
 def debug_str__messages(
-    messages: ty.Optional[ty__messages] = None,
-    **options,
+        messages: ty.Optional[ty__messages] = None,
+        **options,
 ) -> str:
 
     if messages is None:
         return ""
 
     else:
-        return iter_to_str(
+        return iterable_to_str(
             messages,
             style="plain",
             **parse_options__messages(**options),
@@ -370,13 +370,13 @@ DEFAULT__SHOULD_PRINT = True
 
 
 def debug_print(
-    name: ty__name,
-    args: ty.Optional[ty__args] = None,
-    kwargs: ty.Optional[ty__kwargs] = None,
-    messages: ty.Optional[ty__messages] = None,
-    should_print: bool = DEFAULT__SHOULD_PRINT,
-    **options,
-):
+        name: ty__name,
+        args: ty.Optional[ty__args] = None,
+        kwargs: ty.Optional[ty__kwargs] = None,
+        messages: ty.Optional[ty__messages] = None,
+        should_print: bool = DEFAULT__SHOULD_PRINT,
+        **options,
+) -> None:
 
     if should_print:
         print(debug_str(name, args, kwargs, messages, **options))

@@ -2,11 +2,43 @@
 #   DATA STRUCTURES
 ############################################################
 
-from collections import (
-    namedtuple as NamedTuple,
-    defaultdict as DefaultDict,
-    deque as Deck,
-)
+import collections
+
+############################################################
+#   Default Dicts
+############################################################
+
+
+class _DefaultDict(collections.defaultdict):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        return
+
+    def __str__(self):
+        return str(dict(self))
+
+    def __repr__(self):
+        return repr(dict(self))
+
+
+class DefaultDict(_DefaultDict):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        return
+
+    @staticmethod
+    def OfValue(some_value, *args, **kwargs):
+        return DefaultDict(lambda: some_value, *args, **kwargs)
+
+
+class NestedDefaultDict(_DefaultDict):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(NestedDefaultDict, *args, **kwargs)
+        return
+
 
 ############################################################
 #   Queue
@@ -17,7 +49,7 @@ class Queue:
 
     def __init__(self):
 
-        self.__container = Deck()
+        self.__container = collections.deque()
         return
 
     def __len__(self):
@@ -47,7 +79,7 @@ class Stack:
 
     def __init__(self):
 
-        self.__container = Deck()
+        self.__container = collections.deque()
         return
 
     def __len__(self):
