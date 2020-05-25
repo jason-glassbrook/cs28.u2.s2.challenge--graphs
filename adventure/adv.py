@@ -31,7 +31,7 @@ class Adventure:
 
         return
 
-    def explore(self):
+    def walk(self):
 
         player = self.player
 
