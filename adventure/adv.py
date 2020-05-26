@@ -55,28 +55,43 @@ class Adventure:
 
         return
 
-    def test_traversal(self):
+    def traverse_world(self):
+
+        world = self.world
+        room_count = len(self.world.rooms)
+
+        player = self.player
+        player.current_room = world.starting_room
+
+        # list of `(move, to_node)`
+        traversed_path = [(None, player.current_room)]
+
+        return traversed_path
+
+    def test_traverse_world(self):
 
         world = self.world
         world_info = self.world_info
         player = self.player
 
-        # Fill this out with directions to walk
-        # traversal_path = ['n', 'n']
-        traversal_path = []
+        # Run and unpack results
+        traversed_path = self.traverse_world()
+        traversed_moves = tuple(
+            move for (move, *rest) in traversed_path[1:]
+        )    # take all moves except the first (which is None)
 
         # TRAVERSAL TEST - DO NOT MODIFY
         visited_rooms = set()
         player.current_room = world.starting_room
         visited_rooms.add(player.current_room)
 
-        for move in traversal_path:
+        for move in traversed_moves:
             player.travel(move)
             visited_rooms.add(player.current_room)
 
         if len(visited_rooms) == len(world_info):
             print(
-                f"TESTS PASSED: {len(traversal_path)} moves, {len(visited_rooms)} rooms visited"
+                f"TESTS PASSED: {len(traversed_moves)} moves, {len(visited_rooms)} rooms visited"
             )
         else:
             print("TESTS FAILED: INCOMPLETE TRAVERSAL")
@@ -311,7 +326,7 @@ if __name__ == "__main__":
         if walk_before_test:
             adventure.walk()
 
-        adventure.test_traversal()
+        adventure.test_traverse_world()
 
         if walk_after_test:
             adventure.walk()
