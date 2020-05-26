@@ -13,9 +13,26 @@ from tools.iter_tools import is_iterable
 
 class WorldGraph:
 
-    def __init__(self, nodes=None, edges=None):
+    DEFAULT__NODES = None
+    DEFAULT__EDGES = None
+    DEFAULT__INVERSE_EDGE_LABEL_PAIRS = None
+    DEFAULT__USE_INVERSE_EDGE_LABEL_PAIRS = True
+
+    def __init__(
+        self,
+        nodes=DEFAULT__NODES,
+        edges=DEFAULT__EDGES,
+        inverse_edge_label_pairs=DEFAULT__INVERSE_EDGE_LABEL_PAIRS,
+        use_inverse_edge_label_pairs=DEFAULT__USE_INVERSE_EDGE_LABEL_PAIRS,
+    ):
 
         self.map = DefaultDict(dict)
+        self.inverse_edge_labels = DefaultDict(list)
+
+        if is_iterable(edges):
+            for (label_a, label_b) in inverse_edge_label_pairs:
+                self.inverse_edge_labels[label_a].append(label_b)
+                self.inverse_edge_labels[label_b].append(label_a)
 
         if is_iterable(nodes):
             for node in nodes:
@@ -23,7 +40,10 @@ class WorldGraph:
 
         if is_iterable(edges):
             for (from_node, edge_label, to_node) in edges:
-                self.add_edge(from_node, edge_label, to_node)
+                if use_inverse_edge_label_pairs and edge_label in self.inverse_edge_labels:
+                    self.add_inverse_edge(from_node, edge_label, to_node)
+                else:
+                    self.add_edge(from_node, edge_label, to_node)
 
         return
 
@@ -40,10 +60,35 @@ class WorldGraph:
 
     def add_edge(self, from_node, edge_label, to_node):
         """
-        Add a directed edge `(from_node, to_node)` to the graph.
+        Add a directed edge `(from_node, edge_label, to_node)` to the graph.
         """
 
         self.map[from_node][edge_label] = to_node
+
+        return
+
+    def add_inverse_edge_label_pair(self, edge_label_a, edge_label_b):
+        """
+        Add the inverse edge label pair `(edge_label_a, edge_label_b)` to the graph's `inverse_edge_labels` dict.
+        """
+
+        self.inverse_edge_labels[edge_label_a].append(edge_label_b)
+        self.inverse_edge_labels[edge_label_b].append(edge_label_a)
+
+        return
+
+    def add_inverse_edge(self, from_node, edge_label, to_node):
+        """
+        Add two directed edges to the graph:
+        - `(from_node, edge_label, to_node)`
+        - `(to_node, self.inverse_edge_labels[edge_label][0], from_node)`
+        """
+
+        edge_label_a = edge_label
+        edge_label_b = self.inverse_edge_labels[edge_label_a][0]
+
+        self.add_edge(from_node, edge_label_a, to_node)
+        self.add_edge(to_node, edge_label_b, from_node)
 
         return
 
@@ -168,35 +213,32 @@ if __name__ == "__main__":
     7 ← → 8 ← → 9
     """
 
-    world_edges = set([
+    world_graph__inverse_edge_label_pairs = (
+        ("n", "s"),
+        ("e", "w"),
+    )
+
+    world_graph__edges = set([
         (1, "e", 2),
-        (2, "w", 1),
         (2, "e", 3),
-        (3, "w", 2),
         (1, "s", 4),
-        (4, "n", 1),
         (3, "s", 6),
-        (6, "n", 3),
         (5, "e", 6),
-        (6, "w", 5),
         (4, "s", 7),
-        (7, "n", 4),
         (6, "s", 9),
-        (9, "n", 6),
         (7, "e", 8),
-        (8, "w", 7),
         (8, "e", 9),
-        (9, "w", 8),
     ])
 
-    world_nodes = set()
-    for (from_node, edge_label, to_node) in world_edges:
-        world_nodes.add(from_node)
-        world_nodes.add(to_node)
+    world_graph__nodes = set()
+    for (from_node, edge_label, to_node) in world_graph__edges:
+        world_graph__nodes.add(from_node)
+        world_graph__nodes.add(to_node)
 
     world_graph = WorldGraph(
-        nodes=world_nodes,
-        edges=world_edges,
+        inverse_edge_label_pairs=world_graph__inverse_edge_label_pairs,
+        nodes=world_graph__nodes,
+        edges=world_graph__edges,
     )
 
     bft_results = world_graph.bft(1)
