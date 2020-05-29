@@ -15,23 +15,23 @@ class MemoryGraph:
 
     DEFAULT__NODES = None
     DEFAULT__EDGES = None
-    DEFAULT__INVERSE_LABEL_PAIRS = None
-    DEFAULT__USE_INVERSE_LABEL_PAIRS = True
+    DEFAULT__INVERSE_LABELS = None
+    DEFAULT__USE_INVERSE_LABELS = True
 
     def __init__(
         self,
         nodes=DEFAULT__NODES,
         edges=DEFAULT__EDGES,
-        inverse_label_pairs=DEFAULT__INVERSE_LABEL_PAIRS,
-        use_inverse_label_pairs=DEFAULT__USE_INVERSE_LABEL_PAIRS,
+        inverse_labels=DEFAULT__INVERSE_LABELS,
+        use_inverse_labels=DEFAULT__USE_INVERSE_LABELS,
     ):
 
         self.map = DefaultDict(dict)
         self.inverse_labels = dict()
 
-        if is_iterable(edges):
-            for (label_a, label_b) in inverse_label_pairs:
-                self.add_inverse_label_pair(label_a, label_b)
+        if is_iterable(inverse_labels):
+            for (label_a, label_b) in inverse_labels:
+                self.add_inverse_label(label_a, label_b)
 
         if is_iterable(nodes):
             for node in nodes:
@@ -39,20 +39,22 @@ class MemoryGraph:
 
         if is_iterable(edges):
             for (from_node, label, to_node) in edges:
-                if use_inverse_label_pairs and label in self.inverse_labels:
+                if use_inverse_labels and label in self.inverse_labels:
                     self.add_both_edges(from_node, label, to_node)
                 else:
                     self.add_edge(from_node, label, to_node)
 
         return
 
-    def add_inverse_label_pair(self, label_a, label_b):
+    def add_inverse_label(self, label_a, label_b):
         """
         Add the inverse label pair `(label_a, label_b)` to the graph's `inverse_labels` dict.
         """
 
+        print(self.inverse_labels)
         self.inverse_labels[label_a] = label_b
         self.inverse_labels[label_b] = label_a
+        print(self.inverse_labels)
 
         return
 
@@ -87,6 +89,7 @@ class MemoryGraph:
         Add a directed edge `(to_node, self.inverse_labels[label], from_node)` to the graph.
         """
 
+        print(self.inverse_labels)
         inverse_label = self.inverse_labels[label]
 
         self.add_edge(to_node, inverse_label, from_node)
@@ -316,7 +319,7 @@ if __name__ == "__main__":
     7 ← → 8 ← → 9
     """
 
-    memory_graph__inverse_label_pairs = (
+    memory_graph__inverse_labels = (
         ("n", "s"),
         ("e", "w"),
     )
@@ -339,7 +342,7 @@ if __name__ == "__main__":
         memory_graph__nodes.add(to_node)
 
     memory_graph = MemoryGraph(
-        inverse_label_pairs=memory_graph__inverse_label_pairs,
+        inverse_labels=memory_graph__inverse_labels,
         nodes=memory_graph__nodes,
         edges=memory_graph__edges,
     )

@@ -149,7 +149,7 @@ class Adventure:
         player.current_room = world.starting_room
 
         # Player "Memory":
-        memory = MemoryGraph(inverse_edge_label_pairs=(
+        memory = MemoryGraph(inverse_labels=(
             ("n", "s"),
             ("e", "w"),
         ))
