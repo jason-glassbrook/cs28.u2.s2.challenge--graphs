@@ -85,7 +85,7 @@ class Adventure:
 
             room = player.current_room
 
-            if room.id not in memory:
+            if room.id not in memory.map:
                 # Add node to memory.
                 memory.add_node(room.id)
 
@@ -156,9 +156,39 @@ class Adventure:
 
         # Traversed Path: a list of `(move, to_node)`
         traversed_path = [(None, player.current_room)]
+        found_all = len(memory.map) == room_count
 
-        while len(memory.map) < room_count:
-            break
+        while not found_all:
+
+            print(player.current_room.id)
+
+            record_room(memory, player)
+            # print(memory.map)
+
+            direction = choose_direction(memory, player)
+            print(direction)
+
+            if direction is not None:
+                # Let's move :D
+                step = move_to(memory, player, direction)
+                traversed_path.append(step)
+
+            else:
+                # We can't immediately move on a new edge :(
+                # Let's look for a new path in memory.
+                path_to_edge_of_unknown = find_path_to_edge_of_unknown(memory, player)
+                print(path_to_edge_of_unknown)
+
+                if path_to_edge_of_unknown:
+
+                    for step in path_to_edge_of_unknown:
+                        # Follow the path.
+                        step = move_to(memory, player, step[0])
+                        traversed_path.append(step)
+
+                else:
+                    # There's nowhere to go from here. We're done!
+                    found_all = True
 
         return traversed_path
 
