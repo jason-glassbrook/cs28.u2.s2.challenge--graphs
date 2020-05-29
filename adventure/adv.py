@@ -11,6 +11,7 @@ import random
 from .room import Room
 from .player import Player
 from .world import World
+from .memory_graph import MemoryGraph
 
 ############################################################
 
@@ -57,14 +58,81 @@ class Adventure:
 
     def traverse_world(self):
 
+        #===========================================================
+        #   HELPERS
+        #-----------------------------------------------------------
+
+        UNKNOWN = "?"
+
+        def get_unknown_directions(memory, room_id):
+            return tuple(
+                direction for (direction, to_room_id) in memory.map[room_id].items()
+                if to_room_id == UNKNOWN
+            )
+
+        def has_unknown_directions(memory, room_id):
+            return (UNKNOWN in memory.map[room_id].values())
+
+        def path_to_edge_of_unknown(memory, room_id):
+
+            def found_edge_of_unknown(curr_room_id, *rest):
+                # `True` when `curr_room_id` points to `UNKNOWN`.
+                return has_unknown_directions(memory, curr_room_id)
+
+            return memory.bfs(found_edge_of_unknown, room_id)
+
+        def record_room(memory, player):
+
+            room = player.current_room
+
+            if room.id not in memory:
+                # add node to memory
+                memory.add_node(room.id)
+
+                for direction in room.get_exits():
+                    # record blank edge
+                    memory.add_edge(room.id, direction, UNKNOWN)
+
+            else:
+                # nothing to do here
+                pass
+
+            return memory.map[room.id]
+
+        def choose_direction(memory, player):
+
+            room = player.current_room
+            unknown_directions = get_unknown_directions(memory, room.id)
+
+            if unknown_directions:
+                # randomly choose a direction
+                return random.choice(unknown_directions)
+
+            else:
+                # there's nowhere new to go
+                return None
+
+        #===========================================================
+
+        # world
         world = self.world
         room_count = len(self.world.rooms)
 
+        # player
         player = self.player
         player.current_room = world.starting_room
 
+        # player "memory"
+        memory = MemoryGraph(inverse_edge_label_pairs=(
+            ("n", "s"),
+            ("e", "w"),
+        ))
+
         # list of `(move, to_node)`
         traversed_path = [(None, player.current_room)]
+
+        while len(memory.map) < room_count:
+            break
 
         return traversed_path
 
