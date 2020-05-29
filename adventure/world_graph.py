@@ -63,6 +63,12 @@ class WorldGraph:
         Add a directed edge `(from_node, edge_label, to_node)` to the graph.
         """
 
+        if from_node not in self.map:
+            self.add_node(from_node)
+
+        if to_node not in self.map:
+            self.add_node(to_node)
+
         self.map[from_node][edge_label] = to_node
 
         return
