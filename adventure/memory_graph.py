@@ -51,10 +51,8 @@ class MemoryGraph:
         Add the inverse label pair `(label_a, label_b)` to the graph's `inverse_labels` dict.
         """
 
-        print(self.inverse_labels)
         self.inverse_labels[label_a] = label_b
         self.inverse_labels[label_b] = label_a
-        print(self.inverse_labels)
 
         return
 
@@ -89,7 +87,6 @@ class MemoryGraph:
         Add a directed edge `(to_node, self.inverse_labels[label], from_node)` to the graph.
         """
 
-        print(self.inverse_labels)
         inverse_label = self.inverse_labels[label]
 
         self.add_edge(to_node, inverse_label, from_node)
