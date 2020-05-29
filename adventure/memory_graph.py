@@ -41,7 +41,7 @@ class MemoryGraph:
         if is_iterable(edges):
             for (from_node, edge_label, to_node) in edges:
                 if use_inverse_edge_label_pairs and edge_label in self.inverse_edge_labels:
-                    self.add_both_edge(from_node, edge_label, to_node)
+                    self.add_both_edges(from_node, edge_label, to_node)
                 else:
                     self.add_edge(from_node, edge_label, to_node)
 
