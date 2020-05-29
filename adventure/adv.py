@@ -112,6 +112,30 @@ class Adventure:
                 # There's nowhere new to go.
                 return None
 
+        def move_to(memory, player, direction):
+
+            from_room = player.current_room
+            player.travel(direction)
+            to_room = player.current_room
+
+            # Remember this connection!
+            memory.add_both_edges(from_room.id, direction, to_room.id)
+
+            return (direction, to_room.id)
+
+        def move_from(memory, player, direction):
+
+            inverse_direction = memory.inverse_labels[direction]
+
+            from_room = player.current_room
+            player.travel(inverse_direction)
+            to_room = player.current_room
+
+            # Remember this connection!
+            memory.add_both_edges(from_room.id, inverse_direction, to_room.id)
+
+            return (direction, to_room.id)
+
         #===========================================================
 
         # World:
