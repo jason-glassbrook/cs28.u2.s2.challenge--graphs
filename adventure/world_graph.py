@@ -140,61 +140,80 @@ class WorldGraph:
 
         return self.xft(Stack(), from_node)
 
-    def xfs(self, paths_to_visit, from_node, to_node):
+    def xfs(self, paths_to_search, from_node, done_searching):
         """
-        Find a path in the graph from `from_node` to `to_node` in customizable order.
+        Find a path in the graph from `from_node` until `done_searching(...)` is True, in customizable order.
+        The order is determined by how `paths_to_search` implements `*.push` and `*.pop`.
+        The signature of `done_searching` is `(curr_node, curr_path, from_node, visited_nodes, paths_to_search) -> bool`.
         """
 
         visited_nodes = set()
-        searched_path = None
+        searched_path = list()
 
-        if from_node == to_node:
+        curr_node = from_node
+        curr_path = [(None, from_node)]
 
-            searched_path = [(None, to_node)]
+        if done_searching(
+                curr_node,
+                curr_path,
+                from_node,
+                visited_nodes,
+                paths_to_search,
+        ):
+
+            searched_path = curr_path
 
         else:
 
-            paths_to_visit.push([(None, from_node)])
+            paths_to_search.push(curr_path)
 
-        while len(paths_to_visit) > 0 and searched_path is None:
+        while len(paths_to_search) > 0 and searched_path is None:
 
-            path = paths_to_visit.pop()
-            (label, node) = path[-1]
+            curr_path = paths_to_search.pop()
+            (curr_label, curr_node) = curr_path[-1]
 
-            if node not in visited_nodes:
+            if curr_node not in visited_nodes:
 
-                visited_nodes.add(node)
+                visited_nodes.add(curr_node)
 
-                for (neighbor_label, neighbor_node) in self.get_neighbors(node).items():
+                for (next_label, next_node) in self.get_neighbors(curr_node).items():
 
-                    neighbor_path = list(path)
-                    neighbor_path.append((neighbor_label, neighbor_node))
+                    next_path = list(curr_path)    # copy of `curr_path`
+                    next_path.append((next_label, next_node))
 
-                    if neighbor_node == to_node:
+                    if done_searching(
+                            curr_node,
+                            curr_path,
+                            from_node,
+                            visited_nodes,
+                            paths_to_search,
+                    ):
 
-                        searched_path = neighbor_path
+                        searched_path = next_path
                         break
 
-                    paths_to_visit.push(neighbor_path)
+                    paths_to_search.push(next_path)
 
             else:
                 pass
 
         return searched_path
 
-    def bfs(self, from_node, to_node):
+    def bfs(self, from_node, done_searching):
         """
-        Return a list containing the shortest path from `from_node` to `to_node` in breath-first order.
-        """
-
-        return self.xfs(Queue(), from_node, to_node)
-
-    def dfs(self, from_node, to_node):
-        """
-        Return a list containing a path from `from_node` to `to_node` in depth-first order.
+        Find a path in the graph from `from_node` until `done_searching(...)` is True, in breadth-first order.
+        The signature of `done_searching` is `(curr_node, curr_path, from_node, visited_nodes, paths_to_search) -> bool`.
         """
 
-        return self.xfs(Stack(), from_node, to_node)
+        return self.xfs(Queue(), from_node, done_searching)
+
+    def dfs(self, from_node, done_searching):
+        """
+        Find a path in the graph from `from_node` until `done_searching(...)` is True, in breadth-first order.
+        The signature of `done_searching` is `(curr_node, curr_path, from_node, visited_nodes, paths_to_search) -> bool`.
+        """
+
+        return self.xfs(Stack(), from_node, done_searching)
 
 
 ############################################################
