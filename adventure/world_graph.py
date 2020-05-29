@@ -118,8 +118,8 @@ class WorldGraph:
                 visited_nodes.add(node)
                 traversed_nodes.append((label, node))
 
-                for (neighbor_label, neighbor_node) in self.get_neighbors(node).items():
-                    nodes_to_visit.push((neighbor_label, neighbor_node))
+                for (next_label, next_node) in self.get_neighbors(node).items():
+                    nodes_to_visit.push((next_label, next_node))
 
             else:
                 pass
@@ -128,14 +128,14 @@ class WorldGraph:
 
     def bft(self, from_node):
         """
-        Print each node in breadth-first order beginning from `from_node`.
+        Find each node in the graph starting from `from_node`, in breadth-first order.
         """
 
         return self.xft(Queue(), from_node)
 
     def dft(self, from_node):
         """
-        Print each node in depth-first order beginning from `from_node`.
+        Find each node in the graph starting from `from_node`, in depth-first order.
         """
 
         return self.xft(Stack(), from_node)
