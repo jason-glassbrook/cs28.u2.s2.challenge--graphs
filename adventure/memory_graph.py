@@ -1,5 +1,5 @@
 ############################################################
-#   WORLD GRAPH
+#   MEMORY GRAPH
 #-----------------------------------------------------------
 ############################################################
 
@@ -7,11 +7,11 @@ from tools.data_structures import DefaultDict, Stack, Queue
 from tools.iter_tools import is_iterable
 
 ############################################################
-#   WorldGraph
+#   MemoryGraph
 ############################################################
 
 
-class WorldGraph:
+class MemoryGraph:
 
     DEFAULT__NODES = None
     DEFAULT__EDGES = None
@@ -301,7 +301,7 @@ class WorldGraph:
 
 if __name__ == "__main__":
 
-    world_map = """
+    memory_map = """
     1 ← → 2 ← → 3
     ↑           ↑
     ↓           ↓
@@ -311,12 +311,12 @@ if __name__ == "__main__":
     7 ← → 8 ← → 9
     """
 
-    world_graph__inverse_edge_label_pairs = (
+    memory_graph__inverse_edge_label_pairs = (
         ("n", "s"),
         ("e", "w"),
     )
 
-    world_graph__edges = set([
+    memory_graph__edges = set([
         (1, "e", 2),
         (2, "e", 3),
         (1, "s", 4),
@@ -328,23 +328,23 @@ if __name__ == "__main__":
         (8, "e", 9),
     ])
 
-    world_graph__nodes = set()
-    for (from_node, edge_label, to_node) in world_graph__edges:
-        world_graph__nodes.add(from_node)
-        world_graph__nodes.add(to_node)
+    memory_graph__nodes = set()
+    for (from_node, edge_label, to_node) in memory_graph__edges:
+        memory_graph__nodes.add(from_node)
+        memory_graph__nodes.add(to_node)
 
-    world_graph = WorldGraph(
-        inverse_edge_label_pairs=world_graph__inverse_edge_label_pairs,
-        nodes=world_graph__nodes,
-        edges=world_graph__edges,
+    memory_graph = MemoryGraph(
+        inverse_edge_label_pairs=memory_graph__inverse_edge_label_pairs,
+        nodes=memory_graph__nodes,
+        edges=memory_graph__edges,
     )
 
-    results__bft = world_graph.bft(1)
-    results__dft = world_graph.dft(1)
-    results__bfs__to_node = world_graph.bfs__to_node(5, 1)
-    results__dfs__to_node = world_graph.dfs__to_node(5, 1)
-    results__bfs__to_node_set = world_graph.bfs__to_node_set({3, 6, 5, 9}, 1)
-    results__dfs__to_node_set = world_graph.dfs__to_node_set({3, 6, 5, 9}, 1)
+    results__bft = memory_graph.bft(1)
+    results__dft = memory_graph.dft(1)
+    results__bfs__to_node = memory_graph.bfs__to_node(5, 1)
+    results__dfs__to_node = memory_graph.dfs__to_node(5, 1)
+    results__bfs__to_node_set = memory_graph.bfs__to_node_set({3, 6, 5, 9}, 1)
+    results__dfs__to_node_set = memory_graph.dfs__to_node_set({3, 6, 5, 9}, 1)
 
     #-----------------------------------------------------------
 
@@ -358,12 +358,12 @@ if __name__ == "__main__":
         print()
         return
 
-    print_heading("world_graph : __main__", width=line_width)
+    print_heading("memory_graph : __main__", width=line_width)
     print_spaced(
         "--- pretty map ---",
-        world_map,
+        memory_map,
         "--- map ---",
-        pprint.pformat(world_graph.map),
+        pprint.pformat(memory_graph.map),
         "--- bft ---",
         pprint.pformat(results__bft),
         "--- dft ---",
