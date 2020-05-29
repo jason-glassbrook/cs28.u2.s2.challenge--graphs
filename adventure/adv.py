@@ -20,21 +20,21 @@ class Adventure:
 
     def __init__(self, world_file):
 
-        # load world
+        # Load world.
         self.world = World()
 
-        # load the map into a dictionary
+        # Load the map into a dictionary.
         self.world_info = ast.literal_eval(open(world_file, "r").read())
         self.world.load_graph(self.world_info)
 
-        # initialize the player
+        # Initialize the player.
         self.player = Player(self.world.starting_room)
 
         return
 
     def show_map(self):
 
-        # print an ASCII map of the world
+        # Print an ASCII map of the world.
         self.world.print_rooms()
 
         return
@@ -76,7 +76,7 @@ class Adventure:
         def path_to_edge_of_unknown(memory, room_id):
 
             def found_edge_of_unknown(curr_room_id, *rest):
-                # `True` when `curr_room_id` points to `UNKNOWN`.
+                # Returns `True` when `curr_room_id` points to `UNKNOWN`.
                 return has_unknown_directions(memory, curr_room_id)
 
             return memory.bfs(found_edge_of_unknown, room_id)
@@ -86,15 +86,15 @@ class Adventure:
             room = player.current_room
 
             if room.id not in memory:
-                # add node to memory
+                # Add node to memory.
                 memory.add_node(room.id)
 
                 for direction in room.get_exits():
-                    # record blank edge
+                    # Record a "blank" edge.
                     memory.add_edge(room.id, direction, UNKNOWN)
 
             else:
-                # nothing to do here
+                # Nothing to do here.
                 pass
 
             return memory.map[room.id]
@@ -105,30 +105,30 @@ class Adventure:
             unknown_directions = get_unknown_directions(memory, room.id)
 
             if unknown_directions:
-                # randomly choose a direction
+                # Randomly choose a direction.
                 return random.choice(unknown_directions)
 
             else:
-                # there's nowhere new to go
+                # There's nowhere new to go.
                 return None
 
         #===========================================================
 
-        # world
+        # World:
         world = self.world
         room_count = len(self.world.rooms)
 
-        # player
+        # Player:
         player = self.player
         player.current_room = world.starting_room
 
-        # player "memory"
+        # Player "Memory":
         memory = MemoryGraph(inverse_edge_label_pairs=(
             ("n", "s"),
             ("e", "w"),
         ))
 
-        # list of `(move, to_node)`
+        # Traversed Path: a list of `(move, to_node)`
         traversed_path = [(None, player.current_room)]
 
         while len(memory.map) < room_count:
@@ -142,11 +142,11 @@ class Adventure:
         world_info = self.world_info
         player = self.player
 
-        # Run and unpack results
+        # Run and unpack results.
         traversed_path = self.traverse_world()
         traversed_moves = tuple(
             move for (move, *rest) in traversed_path[1:]
-        )    # take all moves except the first (which is None)
+        )    # -- this takes all moves except the first (which is None).
 
         # TRAVERSAL TEST - DO NOT MODIFY
         visited_rooms = set()
