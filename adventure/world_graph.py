@@ -167,7 +167,7 @@ class WorldGraph:
 
             paths_to_search.push(curr_path)
 
-        while len(paths_to_search) > 0 and searched_path is None:
+        while len(paths_to_search) > 0 and not searched_path:
 
             curr_path = paths_to_search.pop()
             (curr_label, curr_node) = curr_path[-1]
@@ -182,8 +182,8 @@ class WorldGraph:
                     next_path.append((next_label, next_node))
 
                     if done_searching(
-                            curr_node,
-                            curr_path,
+                            next_node,
+                            next_path,
                             from_node,
                             visited_nodes,
                             paths_to_search,
