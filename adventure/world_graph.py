@@ -221,10 +221,10 @@ class WorldGraph:
         The order is determined by how `paths_to_search` implements `*.push` and `*.pop`.
         """
 
-        def done_searching(curr_node, *rest):
+        def found_to_node(curr_node, *rest):
             return curr_node == to_node
 
-        return self.xfs(paths_to_search, from_node, done_searching)
+        return self.xfs(paths_to_search, from_node, found_to_node)
 
     def bfs__to_node(self, from_node, to_node):
         """
