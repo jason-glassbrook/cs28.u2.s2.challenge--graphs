@@ -73,7 +73,7 @@ class Adventure:
         def has_unknown_directions(memory, room_id):
             return (UNKNOWN in memory.map[room_id].values())
 
-        def path_to_edge_of_unknown(memory, room_id):
+        def find_path_to_edge_of_unknown(memory, room_id):
 
             def found_edge_of_unknown(curr_room_id, *rest):
                 # Returns `True` when `curr_room_id` points to `UNKNOWN`.
