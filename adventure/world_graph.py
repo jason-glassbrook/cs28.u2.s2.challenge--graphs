@@ -99,10 +99,17 @@ class WorldGraph:
 
         return dict(self.map[node])    # We don't want users to directly edit this.
 
-    def xft(self, nodes_to_visit, from_node):
+    def xft(
+        self,
+        from_node,
+        nodes_to_visit=None,
+    ):
         """
         Find each node in the graph from `from_node` in customizable order.
         """
+
+        if nodes_to_visit is None:
+            nodes_to_visit = list()
 
         visited_nodes = set()
         traversed_nodes = list()
@@ -131,21 +138,29 @@ class WorldGraph:
         Find each node in the graph starting from `from_node`, in breadth-first order.
         """
 
-        return self.xft(Queue(), from_node)
+        return self.xft(from_node, Queue())
 
     def dft(self, from_node):
         """
         Find each node in the graph starting from `from_node`, in depth-first order.
         """
 
-        return self.xft(Stack(), from_node)
+        return self.xft(from_node, Stack())
 
-    def xfs(self, paths_to_search, from_node, done_searching):
+    def xfs(
+        self,
+        found,
+        from_node,
+        paths_to_search=None,
+    ):
         """
-        Find a path in the graph from `from_node` until `done_searching(...)` is True, in customizable order.
+        Find a path in the graph from `from_node` until `found(...)` is True, in customizable order.
         The order is determined by how `paths_to_search` implements `*.push` and `*.pop`.
-        The signature of `done_searching` is `(curr_node, curr_path, from_node, visited_nodes, paths_to_search) -> bool`.
+        The signature of `found` is `(curr_node, curr_path, from_node, paths_to_search, visited_nodes,) -> bool`.
         """
+
+        if paths_to_search is None:
+            paths_to_search = list()
 
         visited_nodes = set()
         searched_path = list()
@@ -153,12 +168,12 @@ class WorldGraph:
         curr_node = from_node
         curr_path = [(None, from_node)]
 
-        if done_searching(
+        if found(
                 curr_node,
                 curr_path,
                 from_node,
-                visited_nodes,
                 paths_to_search,
+                visited_nodes,
         ):
 
             searched_path = curr_path
@@ -181,12 +196,12 @@ class WorldGraph:
                     next_path = list(curr_path)    # copy of `curr_path`
                     next_path.append((next_label, next_node))
 
-                    if done_searching(
+                    if found(
                             next_node,
                             next_path,
                             from_node,
-                            visited_nodes,
                             paths_to_search,
+                            visited_nodes,
                     ):
 
                         searched_path = next_path
@@ -199,46 +214,49 @@ class WorldGraph:
 
         return searched_path
 
-    def bfs(self, from_node, done_searching):
+    def bfs(self, found, from_node):
         """
-        Find a path in the graph from `from_node` until `done_searching(...)` is True, in breadth-first order.
-        The signature of `done_searching` is `(curr_node, curr_path, from_node, visited_nodes, paths_to_search) -> bool`.
-        """
-
-        return self.xfs(Queue(), from_node, done_searching)
-
-    def dfs(self, from_node, done_searching):
-        """
-        Find a path in the graph from `from_node` until `done_searching(...)` is True, in breadth-first order.
-        The signature of `done_searching` is `(curr_node, curr_path, from_node, visited_nodes, paths_to_search) -> bool`.
+        Find a path in the graph from `from_node` until `found(...)` is True, in breadth-first order.
         """
 
-        return self.xfs(Stack(), from_node, done_searching)
+        return self.xfs(found, from_node, Queue())
 
-    def xfs__to_node(self, paths_to_search, from_node, to_node):
+    def dfs(self, found, from_node):
+        """
+        Find a path in the graph from `from_node` until `found(...)` is True, in breadth-first order.
+        """
+
+        return self.xfs(found, from_node, Stack())
+
+    def xfs__to_node(
+        self,
+        to_node,
+        from_node,
+        paths_to_search=None,
+    ):
         """
         Find a path in the graph from `from_node` to `to_node`, in customizable order.
         The order is determined by how `paths_to_search` implements `*.push` and `*.pop`.
         """
 
         def found_to_node(curr_node, *rest):
-            return curr_node == to_node
+            return (curr_node == to_node)
 
-        return self.xfs(paths_to_search, from_node, found_to_node)
+        return self.xfs(found_to_node, from_node, paths_to_search)
 
-    def bfs__to_node(self, from_node, to_node):
+    def bfs__to_node(self, to_node, from_node):
         """
-        Return a list containing the shortest path from `from_node` to `to_node`, in breadth-first order.
-        """
-
-        return self.xfs__to_node(Queue(), from_node, to_node)
-
-    def dfs__to_node(self, from_node, to_node):
-        """
-        Return a list containing a path from `from_node` to `to_node`, in depth-first order.
+        Find the shortest path from `from_node` to `to_node`, in breadth-first order.
         """
 
-        return self.xfs__to_node(Stack(), from_node, to_node)
+        return self.xfs__to_node(to_node, from_node, Queue())
+
+    def dfs__to_node(self, to_node, from_node):
+        """
+        Find a path from `from_node` to `to_node`, in depth-first order.
+        """
+
+        return self.xfs__to_node(to_node, from_node, Stack())
 
 
 ############################################################
@@ -287,8 +305,8 @@ if __name__ == "__main__":
 
     results__bft = world_graph.bft(1)
     results__dft = world_graph.dft(1)
-    results__bfs__to_node = world_graph.bfs__to_node(1, 5)
-    results__dfs__to_node = world_graph.dfs__to_node(1, 5)
+    results__bfs__to_node = world_graph.bfs__to_node(5, 1)
+    results__dfs__to_node = world_graph.dfs__to_node(5, 1)
 
     #-----------------------------------------------------------
 
