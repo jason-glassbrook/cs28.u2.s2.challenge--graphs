@@ -41,9 +41,19 @@ class MemoryGraph:
         if is_iterable(edges):
             for (from_node, edge_label, to_node) in edges:
                 if use_inverse_edge_label_pairs and edge_label in self.inverse_edge_labels:
-                    self.add_inverse_edge(from_node, edge_label, to_node)
+                    self.add_both_edge(from_node, edge_label, to_node)
                 else:
                     self.add_edge(from_node, edge_label, to_node)
+
+        return
+
+    def add_inverse_edge_label_pair(self, edge_label_a, edge_label_b):
+        """
+        Add the inverse edge label pair `(edge_label_a, edge_label_b)` to the graph's `inverse_edge_labels` dict.
+        """
+
+        self.inverse_edge_labels[edge_label_a].append(edge_label_b)
+        self.inverse_edge_labels[edge_label_b].append(edge_label_a)
 
         return
 
@@ -73,17 +83,7 @@ class MemoryGraph:
 
         return
 
-    def add_inverse_edge_label_pair(self, edge_label_a, edge_label_b):
-        """
-        Add the inverse edge label pair `(edge_label_a, edge_label_b)` to the graph's `inverse_edge_labels` dict.
-        """
-
-        self.inverse_edge_labels[edge_label_a].append(edge_label_b)
-        self.inverse_edge_labels[edge_label_b].append(edge_label_a)
-
-        return
-
-    def add_inverse_edge(self, from_node, edge_label, to_node):
+    def add_both_edges(self, from_node, edge_label, to_node):
         """
         Add two directed edges to the graph:
         - `(from_node, edge_label, to_node)`
