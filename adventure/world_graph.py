@@ -215,6 +215,31 @@ class WorldGraph:
 
         return self.xfs(Stack(), from_node, done_searching)
 
+    def xfs__to_node(self, paths_to_search, from_node, to_node):
+        """
+        Find a path in the graph from `from_node` to `to_node`, in customizable order.
+        The order is determined by how `paths_to_search` implements `*.push` and `*.pop`.
+        """
+
+        def done_searching(curr_node, *rest):
+            return curr_node == to_node
+
+        return self.xfs(paths_to_search, from_node, done_searching)
+
+    def bfs__to_node(self, from_node, to_node):
+        """
+        Return a list containing the shortest path from `from_node` to `to_node`, in breadth-first order.
+        """
+
+        return self.xfs__to_node(Queue(), from_node, to_node)
+
+    def dfs__to_node(self, from_node, to_node):
+        """
+        Return a list containing a path from `from_node` to `to_node`, in depth-first order.
+        """
+
+        return self.xfs__to_node(Stack(), from_node, to_node)
+
 
 ############################################################
 #   Main
@@ -260,10 +285,10 @@ if __name__ == "__main__":
         edges=world_graph__edges,
     )
 
-    bft_results = world_graph.bft(1)
-    dft_results = world_graph.dft(1)
-    bfs_results = world_graph.bfs(1, 5)
-    dfs_results = world_graph.dfs(1, 5)
+    results__bft = world_graph.bft(1)
+    results__dft = world_graph.dft(1)
+    results__bfs__to_node = world_graph.bfs__to_node(1, 5)
+    results__dfs__to_node = world_graph.dfs__to_node(1, 5)
 
     #-----------------------------------------------------------
 
@@ -284,13 +309,13 @@ if __name__ == "__main__":
         "--- map ---",
         pprint.pformat(world_graph.map),
         "--- bft ---",
-        pprint.pformat(bft_results),
+        pprint.pformat(results__bft),
         "--- dft ---",
-        pprint.pformat(dft_results),
-        "--- bfs ---",
-        pprint.pformat(bfs_results),
-        "--- dfs ---",
-        pprint.pformat(dfs_results),
+        pprint.pformat(results__dft),
+        "--- bfs to node ---",
+        pprint.pformat(results__bfs__to_node),
+        "--- dfs to node ---",
+        pprint.pformat(results__dfs__to_node),
         sep="\n\n",
     )
     print_line(liner="=", width=line_width)
