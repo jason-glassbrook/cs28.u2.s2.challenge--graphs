@@ -94,8 +94,10 @@ class Adventure:
                     memory.add_edge(room.id, direction, UNKNOWN)
 
             else:
-                # Nothing to do here.
-                pass
+                # Record any missing connections.
+                for direction in room.get_exits():
+                    if direction not in memory.map[room.id]:
+                        memory.add_edge(room.id, direction, UNKNOWN)
 
             return memory.map[room.id]
 
