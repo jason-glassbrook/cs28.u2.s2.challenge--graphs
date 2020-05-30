@@ -344,8 +344,13 @@ if __name__ == "__main__":
         edges=memory_graph__edges,
     )
 
+    def found_test(curr_node, *rest):
+        return (5 in memory_graph.map[curr_node].values())
+
     results__bft = memory_graph.bft(1)
     results__dft = memory_graph.dft(1)
+    results__bfs = memory_graph.bfs(found_test, 1)
+    results__dfs = memory_graph.dfs(found_test, 1)
     results__bfs__to_node = memory_graph.bfs__to_node(5, 1)
     results__dfs__to_node = memory_graph.dfs__to_node(5, 1)
     results__bfs__to_node_set = memory_graph.bfs__to_node_set({3, 6, 5, 9}, 1)
@@ -373,6 +378,10 @@ if __name__ == "__main__":
         pprint.pformat(results__bft),
         "--- dft ---",
         pprint.pformat(results__dft),
+        "--- bfs ---",
+        pprint.pformat(results__bfs),
+        "--- dfs ---",
+        pprint.pformat(results__dfs),
         "--- bfs - to node ---",
         pprint.pformat(results__bfs__to_node),
         "--- dfs - to node ---",
